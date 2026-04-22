@@ -1,0 +1,85 @@
+{
+    // --- 彻底禁用微软插件，防止冲突 ---
+    "C_Cpp.intelliSenseEngine": "disabled",
+    "C_Cpp.errorSquiggles": "disabled",
+    "C_Cpp.autocomplete": "disabled",
+    "C_Cpp.suggestSnippets": false,
+
+    // --- 补全与 AI 交互 ---
+    "editor.tabCompletion": "on",
+    "editor.acceptSuggestionOnEnter": "smart",
+    "editor.suggestSelection": "first",
+    "editor.suggest.showInlineDetails": true,
+    // 避免 clangd 和 AI 建议同时弹出时的视觉混乱
+    "editor.suggest.showKeywords": true,        // clangd 关键词
+    "editor.suggest.showSnippets": true,        // clangd 代码片段
+    "editor.quickSuggestions": {
+        "other": "on",  //在正常的代码逻辑区域（如函数体、变量声明等），允许 clangd 自动弹出建议列表
+        "comments": "off",  //在注释里，禁用 clangd 的自动补全，给AI补全
+        "strings": "off"    //在字符串内部（双引号内），禁用 clangd 的自动补全,  给AI补全
+    },
+    "editor.quickSuggestionsDelay": 500,  //clangd 延迟500ms后显示建议列表，避免频繁的弹出建议列表
+    // 让 AI 在注释和字符串中触发更积极
+    "editor.wordBasedSuggestions": "off",        // 禁用基于文本的单词建议（避免三足鼎立：clangd + AI + 单词建议
+    "editor.inlineSuggest.enabled": true,       // 确保行内建议（Copilot类）开启
+    "editor.inlineSuggest.showToolbar": "always", // 让 AI 建议的工具栏常驻，方便鼠标操作
+    "editor.suggest.snippetsPreventQuickSuggestions": false, // 允许在代码片段中继续弹出补全
+    "editor.snippetSuggestions": "bottom", // 确保补全列表里，代码片段排在最下面，不干扰 clangd 的变量提示
+    "editor.semanticHighlighting.enabled": true,
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd", // 确保clangd是默认的格式化器
+
+    // 当clangd和global同时存在时，禁用 peek 视图，强制直接跳转.
+    //By setting these to "goto", you are telling VS Code: "Just take me to the first one it finds.
+    "editor.gotoLocation.multipleDefinitions": "goto",  // 关键配置！
+    "editor.gotoLocation.multipleTypeDefinitions": "goto",
+
+        // 禁用 VS Code 默认的 C/C++ 符号搜索，让给 Global
+    "search.useGlobalIgnoreFiles": true,
+    "search.useIgnoreFiles": true,
+
+    "clangd.path": "${userHome}/.cursor-server/data/User/globalStorage/llvm-vs-code-extensions.vscode-clangd/install/22.1.0/clangd_22.1.0/bin/clangd",
+    "clangd.arguments": [
+        "--background-index",
+        "--compile-commands-dir=${workspaceFolder}",
+        "--header-insertion=never",
+        "--completion-style=detailed",
+        "--clang-tidy",
+        "-j=10"
+    ],
+
+    "gnuGlobal.globalExecutable": "/usr/bin/global",
+    "gnuGlobal.gtagsExecutable": "/usr/bin/gtags",
+    "gnuGlobal.completion": "Disabled", // 禁用全局补全,让给clangd
+    "gnuGlobal.autoUpdate": "Disabled",
+    "gnuGlobal.gtagSkipSymlink": "All",
+
+    "python.languageServer": "None",
+    "python.analysis.typeCheckingMode": "basic", // 开启基本类型检查，类似 clangd 的警告
+    "python.defaultInterpreterPath": "/bin/python3",
+
+    // --- 文件排除逻辑 (核心：减少索引压力) ---
+    "files.exclude": {
+        "build_*/**": true,
+        "HTML/**": true,
+        "**/*.{png,jpg,jpeg,gif,ico,svg}": true,
+        "**/*.html": true,
+        "**/*.{o,a,so,pyc}": true
+    },
+
+    "search.exclude": {
+        "build_*/**": true,
+        "**/images/**": true,
+        "**/*.{png,jpg,jpeg,gif,ico,svg,html}": true,
+        "**/GTAGS": true,
+        "**/GRTAGS": true,
+        "**/GPATH": true
+    },
+
+    "files.watcherExclude": {
+        "build_*/**": true,
+        "**/images/**": true,
+        "**/GTAGS": true, 
+        "**/GRTAGS": true, 
+        "**/GPATH": true
+    }
+}
